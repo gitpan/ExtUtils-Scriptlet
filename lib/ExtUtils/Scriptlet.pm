@@ -2,7 +2,7 @@ use strictures;
 
 package ExtUtils::Scriptlet;
 
-our $VERSION = '1.131970'; # TRIAL VERSION
+our $VERSION = '1.131980'; # VERSION
 
 # ABSTRACT: run perl code in a new process without quoting it, on any OS
 
@@ -45,7 +45,11 @@ sub perl {
       . "\n__END__\n"                    #
       . $p{payload};                     #
 
-    eval { close $fh };
+    eval {
+        # prevent the host perl from being terminated if the child perl dies
+        local $SIG{PIPE} = 'IGNORE';
+        close $fh;
+    };
 
     return $?;
 }
@@ -61,7 +65,7 @@ ExtUtils::Scriptlet - run perl code in a new process without quoting it, on any 
 
 =head1 VERSION
 
-version 1.131970
+version 1.131980
 
 =head1 FUNCTIONS
 
