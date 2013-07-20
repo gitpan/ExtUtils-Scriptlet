@@ -20,7 +20,6 @@ my %WriteMakefileArgs = (
   "LICENSE" => "unrestricted",
   "NAME" => "ExtUtils::Scriptlet",
   "PREREQ_PM" => {
-    "Data::Dumper" => 0,
     "Exporter" => 0,
     "autodie" => 0,
     "strictures" => 0
@@ -33,7 +32,7 @@ my %WriteMakefileArgs = (
     "utf8" => 0,
     "warnings" => 0
   },
-  "VERSION" => "1.131990",
+  "VERSION" => "1.132010",
   "test" => {
     "TESTS" => "t/*.t"
   }
