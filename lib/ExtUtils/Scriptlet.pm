@@ -2,7 +2,7 @@ use strictures;
 
 package ExtUtils::Scriptlet;
 
-our $VERSION = '1.132010'; # VERSION
+our $VERSION = '1.132060'; # VERSION
 
 # ABSTRACT: run perl code in a new process without quoting it, on any OS
 
@@ -21,6 +21,7 @@ our $VERSION = '1.132010'; # VERSION
 
 use Exporter 'import';
 use autodie;
+use Data::Dumper;
 
 our @EXPORT_OK = qw( perl );
 
@@ -33,9 +34,16 @@ sub perl {
     # no idea why it needs 3, please send a letter if you know, so i can burn it
     $code =~ s/\r\n/\r\r\r\n/g if $^O eq "MSWin32";
 
+    die "at_argv needs to be an array reference" if $p{at_argv} and "ARRAY" ne ref $p{at_argv};
+    $p{at_argv} =
+      !defined $p{at_argv}
+      ? ""
+      : sprintf "\@ARGV = \@{ %s };",
+      Data::Dumper->new( [ $p{at_argv} || [] ] )->Useqq( 1 )->Indent( 0 )->Dump;
+
     $p{perl} ||= $^X;
     $p{encoding} = sprintf ":encoding(%s)", $p{encoding} || "UTF-8";
-    $p{$_} ||= "" for qw( args argv payload );
+    $p{$_} = defined $p{$_} ? $p{$_} : "" for qw( args argv payload );
 
     open                                 #
       my $fh,                            #
@@ -44,16 +52,16 @@ sub perl {
       "$p{perl} $p{args} - $p{argv}";    #
 
     print $fh                            #
-      "binmode STDIN;"                   # protect the payload from read
+      "$p{at_argv};"                     #
+      . "binmode STDIN;"                 # protect the payload from read
                                          # mangling (newlines, system locale)
       . "$code;"                         # unpack and execute serialized code
       . "\n__END__\n"                    #
       . $p{payload};                     #
 
     eval {
-
-        # prevent the host perl from being terminated if the child perl dies
-        local $SIG{PIPE} = 'IGNORE';
+        local $SIG{PIPE} = 'IGNORE';     # prevent the host perl from being
+                                         # terminated if the child perl dies
         close $fh;                       # grab exit value so we can return it
     };
 
@@ -71,7 +79,7 @@ ExtUtils::Scriptlet - run perl code in a new process without quoting it, on any 
 
 =head1 VERSION
 
-version 1.132010
+version 1.132060
 
 =head1 FUNCTIONS
 

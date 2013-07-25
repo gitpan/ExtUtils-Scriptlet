@@ -29,8 +29,9 @@ no_index:
 provides:
   ExtUtils::Scriptlet:
     file: lib/ExtUtils/Scriptlet.pm
-    version: 1.132010
+    version: 1.132060
 requires:
+  Data::Dumper: 0
   Exporter: 0
   autodie: 0
   perl: 5.008
@@ -39,4 +40,4 @@ resources:
   bugtracker: http://rt.cpan.org/Public/Dist/Display.html?Name=ExtUtils-Scriptlet
   homepage: https://github.com/wchristian/ExtUtils-Scriptlet
   repository: https://github.com/wchristian/ExtUtils-Scriptlet.git
-version: 1.132010
+version: 1.132060
