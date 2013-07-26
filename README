@@ -3,7 +3,7 @@ NAME
     on any OS
 
 VERSION
-    version 1.132071
+    version 1.132072
 
 SYNOPSIS
         use ExtUtils::Scriptlet 'perl';
@@ -49,13 +49,13 @@ FUNCTIONS
     $? or returned by system().
 
    at_argv
-    This argument expects a reference to an array that can be safely
+    This option expects a reference to an array that can be safely
     serialized with Data::Dumper. The contents of that array are then stored
     and accessible in @ARGV in the child process. $ARGV or ARGV will not be
     populated.
 
    payload
-    This argument expects a single string. That string will be sent into the
+    This option expects a single string. That string will be sent into the
     child process' STDIN. Perl's newline conversion is not a factor in this,
     as it will be disabled on both the host and child side. The encoding of
     the string on the host side will be assumed to be UTF-8 by default, on
@@ -115,7 +115,7 @@ MOTIVATION
     string won't be escaped properly. So you try this:
 
         my $q = $^O eq 'MSWin32' ? '"' : "'";
-        system($^X, '-Ilib', '-e', qq|${q}require strict; print "module ok"${q}|);
+        system($^X, '-Ilib', '-e', qq|${q}require strict; print \"module ok\"${q}|);
 
     But that doesn't work, since Windows has different escaping rules. What
     you need is this:

@@ -2,7 +2,7 @@ use strictures;
 
 package ExtUtils::Scriptlet;
 
-our $VERSION = '1.132071'; # VERSION
+our $VERSION = '1.132072'; # VERSION
 
 # ABSTRACT: run perl code in a new process without quoting it, on any OS
 
@@ -80,7 +80,7 @@ ExtUtils::Scriptlet - run perl code in a new process without quoting it, on any 
 
 =head1 VERSION
 
-version 1.132071
+version 1.132072
 
 =head1 SYNOPSIS
 
@@ -129,13 +129,13 @@ returned by system().
 
 =head3 at_argv
 
-This argument expects a reference to an array that can be safely serialized with
+This option expects a reference to an array that can be safely serialized with
 Data::Dumper. The contents of that array are then stored and accessible in @ARGV
 in the child process. $ARGV or ARGV will not be populated.
 
 =head3 payload
 
-This argument expects a single string. That string will be sent into the child
+This option expects a single string. That string will be sent into the child
 process' STDIN. Perl's newline conversion is not a factor in this, as it will be
 disabled on both the host and child side. The encoding of the string on the host
 side will be assumed to be UTF-8 by default, on the child side the contents of
@@ -198,7 +198,7 @@ That's pretty gross. But still not right, since the quotes around the string
 won't be escaped properly. So you try this:
 
     my $q = $^O eq 'MSWin32' ? '"' : "'";
-    system($^X, '-Ilib', '-e', qq|${q}require strict; print "module ok"${q}|);
+    system($^X, '-Ilib', '-e', qq|${q}require strict; print \"module ok\"${q}|);
 
 But that doesn't work, since Windows has different escaping rules. What you need
 is this:
