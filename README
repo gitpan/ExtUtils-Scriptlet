@@ -3,7 +3,7 @@ NAME
     on any OS
 
 VERSION
-    version 1.132070
+    version 1.132071
 
 SYNOPSIS
         use ExtUtils::Scriptlet 'perl';
@@ -145,7 +145,7 @@ MOTIVATION
 
     ExtUtils::Scriptlet does that.
 
-   FUTURE
+FUTURE
     These are implementation points that i am considering, but not sure
     about yet. If you have thoughts on these, let me know, please.
 
