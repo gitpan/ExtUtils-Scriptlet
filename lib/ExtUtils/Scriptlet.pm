@@ -1,8 +1,9 @@
-use strictures;
+use strict;
+use warnings;
 
 package ExtUtils::Scriptlet;
 
-our $VERSION = '1.132073'; # VERSION
+our $VERSION = '1.132640'; # VERSION
 
 # ABSTRACT: run perl code in a new process without quoting it, on any OS
 
@@ -20,7 +21,6 @@ our $VERSION = '1.132073'; # VERSION
 #
 
 use Exporter 'import';
-use autodie;
 use Data::Dumper;
 
 our @EXPORT_OK = qw( perl );
@@ -45,24 +45,26 @@ sub perl {
     $p{encoding} = sprintf ":encoding(%s)", $p{encoding} || "UTF-8";
     $p{$_} = defined $p{$_} ? $p{$_} : "" for qw( args argv payload );
 
-    open                                 #
-      my $fh,                            #
-      "|- :raw $p{encoding}",            # :raw protects the payload from write
-                                         # mangling (newlines)
-      "$p{perl} $p{args} - $p{argv}";    #
+    open                                #
+      my $fh,                           #
+      "|- :raw $p{encoding}",           # :raw protects the payload from write
+                                        # mangling (newlines)
+      "$p{perl} $p{args} - $p{argv}"    #
+      or die "cannot open perl: $!";    #
 
-    print $fh                            #
-      "$p{at_argv};"                     #
-      . "binmode STDIN;"                 # protect the payload from read
-                                         # mangling (newlines, system locale)
-      . "$code;"                         # unpack and execute serialized code
-      . "\n__END__\n"                    #
-      . $p{payload};                     #
+    print $fh                                    #
+      "$p{at_argv};"                             #
+      . "binmode STDIN;"                         # protect the payload from read
+                                                 # mangling (newlines, system locale)
+      . "$code;"                                 # unpack and execute serialized code
+      . "\n__END__\n"                            #
+      . $p{payload}                              #
+      or die "cannot print code to perl: $!";    #
 
     eval {
-        local $SIG{PIPE} = 'IGNORE';     # prevent the host perl from being
-                                         # terminated if the child perl dies
-        close $fh;                       # grab exit value so we can return it
+        local $SIG{PIPE} = 'IGNORE';             # prevent the host perl from being
+                                                 # terminated if the child perl dies
+        close $fh or die "cannot close perl: $!";    # grab exit value so we can return it
     };
 
     return $?;
@@ -80,7 +82,7 @@ ExtUtils::Scriptlet - run perl code in a new process without quoting it, on any 
 
 =head1 VERSION
 
-version 1.132073
+version 1.132640
 
 =head1 SYNOPSIS
 

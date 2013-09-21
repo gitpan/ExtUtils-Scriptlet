@@ -22,18 +22,16 @@ my %WriteMakefileArgs = (
   "PREREQ_PM" => {
     "Data::Dumper" => 0,
     "Exporter" => 0,
-    "autodie" => 0,
-    "strictures" => 0
+    "strict" => 0,
+    "warnings" => 0
   },
   "TEST_REQUIRES" => {
     "File::Find" => 0,
     "File::Temp" => 0,
     "Test::More" => 0,
-    "strict" => 0,
-    "utf8" => 0,
-    "warnings" => 0
+    "utf8" => 0
   },
-  "VERSION" => "1.132073",
+  "VERSION" => "1.132640",
   "test" => {
     "TESTS" => "t/*.t"
   }

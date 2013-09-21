@@ -3,7 +3,7 @@ NAME
     on any OS
 
 VERSION
-    version 1.132073
+    version 1.132640
 
 SYNOPSIS
         use ExtUtils::Scriptlet 'perl';
